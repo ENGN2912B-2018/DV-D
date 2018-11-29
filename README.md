@@ -20,3 +20,6 @@ Consider the functionality of this project, since we are now at the beginning of
 * **Look up businesses by tags** - users can check the distance to a certain group of restaurants by entering restaurant types
 
 * **Distance to businesses** - users can simply type in their location data and range they want to search and then all restaurants within this area will show up
+
+## Source dataset
+https://www.yelp.com/dataset/download
