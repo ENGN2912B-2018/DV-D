@@ -15,7 +15,7 @@
 #include <vector>
 using namespace std;
 
-vector<business> query( string city = "", string state = "", string res_cnt = "10", string is_open = "", string tag = "", string latitude = "41", string longitude = "-71", int distance = 2 )
+vector<business> query( string city = "", string state = "", string res_cnt = "10", string is_open = "", string tag = "", string latitude = "41.82", string longitude = "-71.42", int distance = 2 )
 {
     //open database
     sqlite3 *db;
@@ -28,7 +28,10 @@ vector<business> query( string city = "", string state = "", string res_cnt = "1
     else
         printf("open db sccess!\n");
     
+    vector<business> res;
     string Q;
+    double d_latitude = stod(latitude);
+    double d_longitude = stod(longitude);
     //Look up business by name/tag, sort by stars desc, limit
     if (tag != ""){
         const char *query1 = "select name, latitude, longitude from business where city = 'Providence' and state = 'RI' and ";
@@ -48,24 +51,29 @@ vector<business> query( string city = "", string state = "", string res_cnt = "1
     }
     //Look up distance(Manhattan) to a location by name/tag, sort by distance asc
     else if (latitude != ""){
-        const char *query1 = "SELECT name, latitude, longitude FROM ( SELECT business.name, business.open, business.latitude, business.longitude, abs(business.latitude-(";
-        const char *query2 = ")) + abs(business.longitude-(";
-        const char *query3 = ")) AS location FROM business ) AS x WHERE location < ";
-        const char *query4 = " order by location asc limit ";
-        string Query1(query1);
-        string Query2(query2);
-        string Query3(query3);
-        string Query4(query4);
-        std::string dis_temp = std::to_string(distance/0.7);
-        if (is_open != "") {
-            const char *q_open = " and open = ";
-            string Q_open(q_open);
-            Q = Query1 + latitude + Query2 + longitude + Query3 + dis_temp + Q_open + is_open + Query4 + res_cnt;
+        if (d_latitude >= 41.813 and d_latitude <= 41.835 and d_longitude >= -71.425 and d_longitude <= -71.391){
+            const char *query1 = "SELECT name, latitude, longitude FROM ( SELECT business.name, business.open, business.latitude, business.longitude, abs(business.latitude-(";
+            const char *query2 = ")) + abs(business.longitude-(";
+            const char *query3 = ")) AS location FROM business ) AS x WHERE location < ";
+            const char *query4 = " order by location asc limit ";
+            string Query1(query1);
+            string Query2(query2);
+            string Query3(query3);
+            string Query4(query4);
+            std::string dis_temp = std::to_string(distance/0.7);
+            if (is_open != "") {
+                const char *q_open = " and open = ";
+                string Q_open(q_open);
+                Q = Query1 + latitude + Query2 + longitude + Query3 + dis_temp + Q_open + is_open + Query4 + res_cnt;
+            }
+            else{
+                Q = Query1 + latitude + Query2 + longitude + Query3 + dis_temp + Query4 + res_cnt;
+            }
         }
         else{
-            Q = Query1 + latitude + Query2 + longitude + Query3 + dis_temp + Query4 + res_cnt;
+            cout << "INVALID INPUT" << endl;
+            return res;
         }
-        
     }
     //Get the businesses in Providence, RI, sort in stars
     else{
@@ -92,7 +100,6 @@ vector<business> query( string city = "", string state = "", string res_cnt = "1
     const unsigned char * name;
     double la;
     double lo;
-    vector<business> res;
     while( r == SQLITE_ROW ){
         name = sqlite3_column_text( stmt,0 );
         la = sqlite3_column_double(stmt, 1);
