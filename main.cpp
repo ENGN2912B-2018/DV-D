@@ -15,7 +15,7 @@
 #include <vector>
 using namespace std;
 
-vector<business> query( string city = "", string state = "", string res_cnt = "10", string is_open = "", string tag = "", string latitude = "47", string longitude = "-71.42", int distance = 2 )
+vector<business> query(string tag = "", string res_cnt = "10", string is_open = "", string latitude = "47", string longitude = "-71.42", int distance = 2 )
 {
     //open database
     sqlite3 *db;
@@ -32,7 +32,7 @@ vector<business> query( string city = "", string state = "", string res_cnt = "1
     string Q;
     double d_latitude = stod(latitude);
     double d_longitude = stod(longitude);
-    //Look up business by name/tag, sort by stars desc, limit
+    //Look up business by name/tag, sort by stars desc
     if (tag != ""){
         const char *query1 = "select name, latitude, longitude from business where city = 'Providence' and state = 'RI' and ";
         const char *query2 = "name like '%";
@@ -118,7 +118,14 @@ vector<business> query( string city = "", string state = "", string res_cnt = "1
 
 
 int main(int argc, char **argv){
+    //Get the businesses in Providence, RI, sort in stars
     vector<business> a = query();
+    
+//    Look up distance(Manhattan) to a location by name/tag, sort by distance asc
+//    vector<business> a = query("", "10", "", "41.82", "-71.4", 2);
+
+//    Look up business by name/tag, sort by stars desc, limit
+//    vector<business> a = query("pizza");
     cout << a[0].get_name() << endl;
     cout << a[1].get_name()<< endl;
     return 0;
