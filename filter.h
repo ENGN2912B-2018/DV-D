@@ -8,7 +8,7 @@
 #include <sqlite3.h>
 #include <string>
 
-vector<business> filter( string res_cnt, string is_open, string tag, string latitude, string longitude, int distance);
+vector<business> filter( string res_cnt, string is_open, string tag, string latitude, string longitude, int distance, string rank);
 
 
 #endif // FILTER_H

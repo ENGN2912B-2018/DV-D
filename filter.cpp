@@ -1,6 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
+//#include <stdio.h>
+//#include <stdlib.h>
+//#include <unistd.h>
 #include "business.h"
 #include <string>
 #include <vector>
@@ -11,14 +11,27 @@
 #include <QtDebug>
 #include <QString>
 #include <iostream>
+#include <QDir>
+#include <QMessageBox>
 using namespace std;
 
 
-vector<business> filter( string res_cnt = "10", string is_open = "", string tag = "", string latitude = "47", string longitude = "-71.42", int distance = 2 )
+vector<business> filter(string res_cnt = "10", string is_open = "", string tag = "", string latitude = "47", string longitude = "-71.42", int distance = 2, string rank = "distance")
 {
     //open database
+    qDebug()<<"current currentPath: "<<QDir::currentPath();
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("/Users/DeathPrison/Documents/C++/yelp.db");
+    //    QString c = QCoreApplication::applicationDirPath();
+    //    db.setDatabaseName(c + "/yelp.db");
+    //    qDebug()<<"current applicationDirPath: "<<QCoreApplication::applicationDirPath();
+    qDebug()<<"current currentPath: "<<QDir::currentPath();
+    QDir temDir("../../../../DV-D-master/yelp.db");
+    QString filePath = temDir.absolutePath();
+//    qDebug(qUtf8Printable(filePath));
+//    QString filePath = QDir::currentPath();
+//    QString file_path = dir_path + "/../../yelp.db";
+//    QMessageBox::warning(0, "PATH", filePath, QMessageBox::Yes);
+    db.setDatabaseName(filePath);
     if( !db.open() )
     {
         qDebug() << db.lastError();
@@ -28,50 +41,27 @@ vector<business> filter( string res_cnt = "10", string is_open = "", string tag 
     
     vector<business> res;
     string Q;
-    double d_latitude = stod(latitude);
-    double d_longitude = stod(longitude);
-//    Look up business by name/tag, sort by stars desc, limit
+    string query1 = "SELECT name, latitude, longitude, review_count, stars, open, distance FROM ( SELECT business.name, business.review_count, business.stars, business.open, business.latitude, business.longitude, abs(business.latitude-(";
+    string query2 = ")) + abs(business.longitude-(";
+    string query3 = ")) AS distance FROM business ) AS x WHERE longitude > -71.425 and longitude < -71.391 and latitude > 41.813 and latitude < 41.835 and distance < ";
+    std::string dis_temp = std::to_string(distance/0.7);
+    Q += query1 + latitude + query2 + longitude + query3 + dis_temp;
     if (tag != ""){
-        qDebug() << "first";
-        string query1 = "select name, latitude, longitude from business where city = 'Providence' and state = 'RI' and ";
-        string query2 = "name like '%";
-        string query3 = "%' order by stars desc LIMIT ";
-        if (is_open != ""){
-            string q_open = "open = ";
-            Q = query1 + q_open + is_open + string(" and ") + query2 + tag + query3 + res_cnt;
-        }
-        else{
-            Q = query1 + query2 + tag + query3 + res_cnt;
-        }
+        Q += " and name like '%" + tag + "%' ";
     }
-    else if(d_latitude >= 41.813 and d_latitude <= 41.835 and d_longitude >= -71.425 and d_longitude <= -71.391){
-        qDebug() << "Second";
-        string query1 = "SELECT name, latitude, longitude FROM ( SELECT business.name, business.open, business.latitude, business.longitude, abs(business.latitude-(";
-        string query2 = ")) + abs(business.longitude-(";
-        string query3 = ")) AS location FROM business ) AS x WHERE location < ";
-        string query4 = " order by location asc limit ";
-        std::string dis_temp = std::to_string(distance/0.7);
-        if (is_open != "") {
-            string q_open = " and open = ";
-            Q = query1 + latitude + query2 + longitude + query3 + dis_temp + q_open + is_open + query4 + res_cnt;
-        }
-        else{
-            Q = query1 + latitude + query2 + longitude + query3 + dis_temp + query4 + res_cnt;
-        }
+    if (is_open != "") {
+        string q_open = " and open = ";
+        Q += q_open + is_open;
+    }
+    if (rank == "distance"){
+        Q += " order by " + rank + " asc limit " + res_cnt;
     }
     else{
-//        Get the businesses in Providence, RI, sort in stars
-        qDebug() << "Third";
-        string query1 = "select name, latitude, longitude from business where city = 'Providence' and state = 'RI' ";
-        string query2 = " order by stars desc LIMIT ";
-        if (is_open != ""){
-            string q_open = "and open = ";
-            Q = query1 + q_open + is_open + query2 + res_cnt;
-        }
-        else{
-            Q = query1 + query2 + res_cnt;
-        }
+        Q += " order by " + rank + " desc limit " + res_cnt;
     }
+
+
+//    qDebug() << QString::fromStdString(Q);
     QSqlQuery qry;
     QString Qry = QString::fromStdString(Q);
     qry.prepare(Qry);
@@ -94,12 +84,10 @@ vector<business> filter( string res_cnt = "10", string is_open = "", string tag 
             string rname = r_name.toStdString();
             business x(rname, rlatitude, rlongitude);
             res.push_back(x);
-            qDebug() << QString( "NAME %1, LA %2, LO %3" ).arg(qry.value(0).toString()).arg(qry.value(1).toDouble()).arg(qry.value(2).toDouble());
-//            qDebug() << QString( "NAME %1" ).arg(qry.value(0).toString());
-
+//            qDebug() << QString( "NAME %1, LA %2, LO %3" ).arg(qry.value(0).toString()).arg(qry.value(1).toDouble()).arg(qry.value(2).toDouble());
         }
     }
     db.close();
-    qDebug() << res.size();
+//    qDebug() << res.size();
     return res;
 }

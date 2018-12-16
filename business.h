@@ -3,7 +3,6 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <fstream>
 #include <math.h>
 #include <QtDebug>
 
@@ -14,22 +13,25 @@ class business
 private:
     //members
     string name_;
-    string address_;
     double latitude_;
     double longitude_;
     double stars_;
-    unsigned review_count_;
+    string review_count_;
 
 public:
     //constructor
     business(){}
+    business(const double latitude, const double longitude):
+    name_{"my_location"}, latitude_(latitude), longitude_(longitude){}
     business(const string name, const double latitude, const double longitude):
     name_(name),latitude_(latitude), longitude_(longitude){}
     ~business(){}
 
     string get_name() const{return name_;}
+    double get_latitude() const{return latitude_;}
+    double get_longitude() const{return longitude_;}
     double get_stars_() const{return stars_;}
-    unsigned get_review_count() const{return review_count_;}
+    string get_review_count_() const{return review_count_;}
 
     //geolacation to coordinates on picture
     vector<double> get_location(){
@@ -41,7 +43,7 @@ public:
         double x0 = 0, y0 = 0, x1 = 5, y1 = 5;
         double x = (longitude_ - m0) / (m1-m0) * (x1-x0) + x0;
         double y = (latitude_ - n0) / (n1-n0) * (y1-y0) + y0;
-        qDebug () << x << y;
+//        qDebug () << x << y;
         vector<double> location;
         location.push_back(x);
         location.push_back(y);

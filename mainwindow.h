@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "form.h"
+#include "form2.h"
 
 namespace Ui {
 class MainWindow;
@@ -14,6 +16,9 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    Form *new_win;
+    Form2 *new_win2;
 
 
 public slots:
