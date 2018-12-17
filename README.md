@@ -1,6 +1,6 @@
 # Data Visualization Final Report
 
-## DataVisualization, Group D 
+## Data Visualization, Group D 
 
 ###### Jia Deng(jia_deng@brown.edu), Jiayi Wang(jiayi_wang3@brown.edu)
 
@@ -12,7 +12,7 @@
 
 ## Project Overview
 
-In this project, our final goal is to visualize a map showing businesses like shops and businesses near a location, based on academic data from yelp website.
+In this project, our final goal is to visualize a map showing businesses like shops and restaurants near a location, based on academic data from yelp website.
 
 The project could be briefly divided into 3 parts, setting up the database, building the interface of C++ with database and data visualization using C++ and Qt.
 
@@ -23,7 +23,7 @@ For this project, our goal is to develop a new approach for users to look up inf
 
   
 
-First, the user can look up business data by name or type. Second, the user is able to sort the local businesses by their opening status to see if they are open or not under a certain time period. Third, the user can simply type in their location data and range they want to search and then all businesses within this area will show up. The result number is also decided by the user.
+First, the user can look up business data by name or type. Second, the user is able to sort the local businesses by their opening status to see if they are open or not under a certain time period. Third, the user can simply type in their location data and range they want to search and then all businesses within this area will show up. The result number and rank are also decided by the user.
 
 * **Objective 1: Data query and parsing.**
 
@@ -41,17 +41,9 @@ First, the user can look up business data by name or type. Second, the user is a
 
 * **Required External Libraries**
 
-		QCustom Plot
-		SQLite3
-		json
-		QApplication
-		QtSql
-		QSqlDatabase
-		QSqlQuery
-		QtDebug
-		QDir
-		QString
-
+		QCustomplot
+		sqlite3
+		
 * **Functional Block Diagrams**
 
 ![](https://lh3.googleusercontent.com/Sug0rLlzBOpCUhsbf2qkaGQa2kKrKmzc7SVLxO4FAxwtLWu3oP0n_-Evwq18CSt7gFZrKddRAvzZvWjBpvehm8qiRDPyiH9Hq3DRKZs_4QYcoqVE22X5WgFiGqa5AG5WyiUHdiJi)
@@ -72,8 +64,8 @@ First, the user can look up business data by name or type. Second, the user is a
 ## Interface Descriptions
 
 * **Graphical Interface**
+**![](https://lh4.googleusercontent.com/jrd6jp6MpBebc4bTPYSdP8lfGTDTYYljAQKP9RxSJz7iH24tVjb4zPk24CY2_TXMDwk3to98EVt43P7Qlqvgo-H9JdOmYsTetaDn6UGHweb4zArZBXUrDxIvXWWug4h1D3iZdF2h)**
 
-![](https://lh5.googleusercontent.com/hJa-1-RvFnOzz0_meFvLx26sgxxGhIfdV5arTnKioD6I0XD4KAk53oVLgsi8C0VchgKacQsD1M18Gkz3i51SD6jsfKC1kSNlEL1E4e_GxvpZKcCKrTMkIVXuQWViRPCxX-IvHbcQ)
 
 * **Data Visualization**
 
@@ -90,7 +82,6 @@ First, the user can look up business data by name or type. Second, the user is a
 
 	If there is no result in given search criteria, the team will use a pop-up window to display "0 result found" error message.
 
-  
   
 
 ## Testing and Evaluation
@@ -115,52 +106,47 @@ The team have tested the program under several operating environment, here are t
 
 	**Convert:** (all with DB Browser for SQLite)
 
-	checking total number of records and types of records attributes
+	checking total number of records and types of records attributes 11/27
 
-	checking types of records attributes
+	checking types of records attributes 11/27
 
-	randomly choosing 5 records and compare its values
+	randomly choosing 5 records and compare its values 11/27
 
 	**Filter:**
 
-	checking with not empty string name and open
+	checking name input with empty string and not empty string name 12/10
 
-	checking with not empty string name
+	checking open status to be open and not matter 12/10
 
-	checking with empty string name and open
-
-	checking with empty string name
+	checking sort status to be distance, review_count and stars 12/16
 
 
 	**Mainwindow:**
 
-	take integer input and display it
+	taking integer input and display it 12/7
 
 	**Linking qcustomplot and Mainwindow:**
 
-	take integer input and plot a curve
+	take integer input and plot a curve 12/7
 
 	**Linking Mainwindow and filter and qcustomplot:**
 
-	no business through output
+	no business through output 12/14
 
-	current location outside of map
+	current location outside of map 12/14
 
-	zero result count input
+	zero result count input 12/14
 
-	business outside of map
-
-	**Built a test.db to test filter cpp file**
-
-	**Implemented filter_test.cpp working on test.db**
+	business outside of map 12/14
+	
+	migrate all files to another machine 12/16
 
   
 
 * **Instructions for compiling and running the software**
 
-	Compiling: Download project file from github -> open Qt Creator -> open project file "team_final.pro" -> configure project based on your computer specifications -> run the program
+	Download project file from github -> open Qt Creator -> open project file "team_final.pro" -> under Project Tab, uncheck "Shadow build" -> run the program
 
-	Running encapsulated file: Download project file from github -> locate ‘release’ subfolder -> run the team_final.app file
 
 ## Conclusions
 
